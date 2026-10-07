@@ -36,7 +36,6 @@ const STEPS = [
   "Finding the market gap & scoring",
 ];
 
-const EXAMPLE: MarketInput = { business: "Premium Gym", location: "Nashik", budget: "₹15 lakh", targetCustomers: "Students + young professionals" };
 
 function Index() {
   const [form, setForm] = useState<MarketInput>({ business: "", location: "", budget: "", targetCustomers: "" });
@@ -59,12 +58,6 @@ function Index() {
   const chooseCustomer = (value: string) => {
     setCustomerPreset(value);
     setForm((current) => ({ ...current, targetCustomers: value === "Other" ? "" : value }));
-  };
-  const loadExample = () => {
-    setForm(EXAMPLE);
-    setBudgetAmount("15");
-    setBudgetUnit("Lakh");
-    setCustomerPreset("Other");
   };
   const valid = form.business.trim().length > 1 && form.location.trim().length > 1 && form.budget.trim() && form.targetCustomers.trim().length > 1;
 
@@ -114,9 +107,6 @@ function Index() {
           </div>
           {mutation.isError && <p className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-danger">{mutation.error.message}</p>}
           <Button type="submit" size="lg" className="glow h-12 w-full text-base font-semibold" disabled={!valid}><Sparkles /> Analyze Market</Button>
-          <Button type="button" variant="ghost" className="w-full text-muted-foreground hover:text-foreground" onClick={loadExample}>
-            Try an example: Premium Gym in Nashik
-          </Button>
         </form>
       </div>
     </main>
