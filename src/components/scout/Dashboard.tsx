@@ -196,19 +196,20 @@ export function Dashboard({ report, onReset }: { report: MarketReport; onReset: 
 
       {/* Costs */}
       <Section icon={<Coins className="h-4 w-4" />} eyebrow="Approximate market price signals — not final costs" title="Startup cost signals">
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto]">
-          <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(260px,340px)]">
+          <div className="grid min-w-0 gap-3 md:grid-cols-2">
             {a.costs.map((c) => (
-              <div key={c.item} className="rounded-xl border bg-surface p-4">
-                <div className="flex justify-between gap-2"><span className="font-semibold">{c.item}</span><span className="font-mono text-sm">{money(c.low, currency)} – {money(c.high, currency)}</span></div>
-                <p className="mt-1 text-xs text-muted-foreground">{c.note}</p>
+              <div key={c.item} className="min-w-0 rounded-xl border bg-surface p-4">
+                <div className="font-semibold leading-snug break-words">{c.item}</div>
+                <div className="mt-2 font-mono text-sm font-semibold text-primary break-words">{money(c.low, currency)} – {money(c.high, currency)}</div>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground break-words">{c.note}</p>
               </div>
             ))}
           </div>
-          <div className="flex min-w-[240px] flex-col justify-center rounded-xl border border-primary/30 bg-primary/5 p-5">
+          <div className="min-w-0 rounded-xl border border-primary/30 bg-primary/5 p-5 xl:sticky xl:top-6">
             <div className="eyebrow">Estimated total</div>
-            <div className="mt-1 font-display text-3xl font-extrabold">{money(totalLow, currency)} – {money(totalHigh, currency)}</div>
-            <p className="mt-2 text-sm text-muted-foreground">{a.budgetFit}</p>
+            <div className="mt-2 font-display text-2xl font-extrabold leading-tight break-words md:text-3xl">{money(totalLow, currency)} – {money(totalHigh, currency)}</div>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground break-words">{a.budgetFit}</p>
           </div>
         </div>
       </Section>

@@ -8,6 +8,8 @@ import { Dashboard } from "@/components/scout/Dashboard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BUDGET_UNITS, CUSTOMER_OPTIONS, formatBudget } from "@/lib/market-form-options";
 import { Check, Loader2, Radar, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -38,6 +40,9 @@ const EXAMPLE: MarketInput = { business: "Premium Gym", location: "Nashik", budg
 
 function Index() {
   const [form, setForm] = useState<MarketInput>({ business: "", location: "", budget: "", targetCustomers: "" });
+  const [budgetAmount, setBudgetAmount] = useState("");
+  const [budgetUnit, setBudgetUnit] = useState<(typeof BUDGET_UNITS)[number]>("Lakh");
+  const [customerPreset, setCustomerPreset] = useState("");
   const [report, setReport] = useState<MarketReport | null>(null);
   const fn = useServerFn(analyzeMarket);
   const mutation = useMutation({ mutationFn: (data: MarketInput) => fn({ data }), onSuccess: setReport });
@@ -46,6 +51,21 @@ function Index() {
   if (mutation.isPending) return <Research input={mutation.variables ?? form} />;
 
   const set = (k: keyof MarketInput) => (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [k]: e.target.value });
+  const updateBudget = (amount: string, unit: (typeof BUDGET_UNITS)[number]) => {
+    setBudgetAmount(amount);
+    setBudgetUnit(unit);
+    setForm((current) => ({ ...current, budget: formatBudget(amount, unit) }));
+  };
+  const chooseCustomer = (value: string) => {
+    setCustomerPreset(value);
+    setForm((current) => ({ ...current, targetCustomers: value === "Other" ? "" : value }));
+  };
+  const loadExample = () => {
+    setForm(EXAMPLE);
+    setBudgetAmount("15");
+    setBudgetUnit("Lakh");
+    setCustomerPreset("Other");
+  };
   const valid = form.business.trim().length > 1 && form.location.trim().length > 1 && form.budget.trim() && form.targetCustomers.trim().length > 1;
 
   return (
@@ -71,14 +91,32 @@ function Index() {
           <Field id="business" label="Business type" placeholder="e.g. Premium Gym" value={form.business} onChange={set("business")} />
           <Field id="location" label="Location" placeholder="e.g. Nashik" value={form.location} onChange={set("location")} />
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field id="budget" label="Budget" placeholder="e.g. ₹15 lakh" value={form.budget} onChange={set("budget")} />
-            <Field id="target" label="Target customers" placeholder="e.g. Students" value={form.targetCustomers} onChange={set("targetCustomers")} />
+            <div className="space-y-2">
+              <Label htmlFor="budget">Budget</Label>
+              <div className="grid grid-cols-[minmax(0,1fr)_7.5rem]">
+                <Input id="budget" inputMode="decimal" className="h-11 rounded-r-none bg-surface" maxLength={12} placeholder="e.g. 15" value={budgetAmount} onChange={(e) => updateBudget(e.target.value.replace(/[^0-9.]/g, ""), budgetUnit)} />
+                <Select value={budgetUnit} onValueChange={(value) => updateBudget(budgetAmount, value as (typeof BUDGET_UNITS)[number])}>
+                  <SelectTrigger aria-label="Budget unit" className="h-11 rounded-l-none border-l-0 bg-surface">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>{BUDGET_UNITS.map((unit) => <SelectItem key={unit} value={unit}>{unit}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="target-customers">Target customers</Label>
+              <Select value={customerPreset} onValueChange={chooseCustomer}>
+                <SelectTrigger id="target-customers" className="h-11 bg-surface"><SelectValue placeholder="Select customers" /></SelectTrigger>
+                <SelectContent>{CUSTOMER_OPTIONS.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent>
+              </Select>
+              {customerPreset === "Other" && <Input aria-label="Other target customers" className="h-11 bg-surface" maxLength={160} placeholder="Describe your customers" value={form.targetCustomers} onChange={set("targetCustomers")} />}
+            </div>
           </div>
           {mutation.isError && <p className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-danger">{mutation.error.message}</p>}
           <Button type="submit" size="lg" className="glow h-12 w-full text-base font-semibold" disabled={!valid}><Sparkles /> Analyze Market</Button>
-          <button type="button" className="w-full text-center text-sm text-muted-foreground hover:text-foreground" onClick={() => setForm(EXAMPLE)}>
+          <Button type="button" variant="ghost" className="w-full text-muted-foreground hover:text-foreground" onClick={loadExample}>
             Try an example: Premium Gym in Nashik
-          </button>
+          </Button>
         </form>
       </div>
     </main>
