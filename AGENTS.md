@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Rules
+- Third-party API keys (SERPAPI_API_KEY, LOVABLE_API_KEY) are read only from server env inside `src/lib/market.server.ts`; never hardcode or expose them to the client — forks must supply their own keys (see `.env.example`).
+- Market research runs in one server function (`analyzeMarket`) that gathers search data then asks AI for a strict-JSON analysis; keeps all keys and prompts server-side.
