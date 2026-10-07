@@ -1,14 +1,16 @@
-# Welcome to your Lovable project
+# API Key Guardian
+
+here is my serp api key=787ee4dbfe7cd37e1e848f6aefc791f9a8833391bd366f525119a019b9f33fd9  just remeber, if someone downloaded my code from github, he can used the code, but he need to enter his own api key, he should not used my api, and my api should not be expose
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/672e13a1-9d04-43ae-8808-ad8b8f3d2617).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +22,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
